@@ -10,6 +10,7 @@
 		3165F04915D46EF300522852 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3165F04815D46EF300522852 /* Foundation.framework */; };
 		3165F04C15D46EF300522852 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3165F04B15D46EF300522852 /* main.m */; };
 		3165F05715D4745A00522852 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3165F05615D4745A00522852 /* CoreServices.framework */; };
+		3165F05B15D484AA00522852 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3165F05A15D484AA00522852 /* ImageIO.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +31,7 @@
 		3165F04B15D46EF300522852 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3165F04E15D46EF300522852 /* icnsdump-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "icnsdump-Prefix.pch"; sourceTree = "<group>"; };
 		3165F05615D4745A00522852 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		3165F05A15D484AA00522852 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3165F05B15D484AA00522852 /* ImageIO.framework in Frameworks */,
 				3165F05715D4745A00522852 /* CoreServices.framework in Frameworks */,
 				3165F04915D46EF300522852 /* Foundation.framework in Frameworks */,
 			);
@@ -67,6 +70,7 @@
 			children = (
 				3165F04815D46EF300522852 /* Foundation.framework */,
 				3165F05615D4745A00522852 /* CoreServices.framework */,
+				3165F05A15D484AA00522852 /* ImageIO.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

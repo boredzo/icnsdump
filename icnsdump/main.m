@@ -10,6 +10,7 @@
 
 static void readAndListIconFamilyFileAtPath(NSString *path);
 static void listTypesInTOC(const void *ptr, size_t size);
+static void attemptToIdentifyIconTypeAndSize(const void *ptr, size_t size);
 
 #define POINTER_OFFSET(startptr, offptr) 
 struct IconFamilyTOCElement {
@@ -45,6 +46,8 @@ static void readAndListIconFamilyFileAtPath(NSString *path) {
 			NSLog(@"%@", NSFileTypeForHFSTypeCode(elementType));
 			if (elementType == 'TOC ')
 				listTypesInTOC(elementPtr->elementData, CFSwapInt32BigToHost(elementPtr->elementSize) - offsetof(IconFamilyElement, elementData));
+			else
+				attemptToIdentifyIconTypeAndSize(elementPtr->elementData, CFSwapInt32BigToHost(elementPtr->elementSize) - offsetof(IconFamilyElement, elementData));
 //			NSLog(@"Next element in: %u", CFSwapInt32BigToHost(elementPtr->elementSize));
 			elementPtr = (void*)elementPtr + (ptrdiff_t)CFSwapInt32BigToHost(elementPtr->elementSize);
 		}
@@ -58,5 +61,39 @@ static void listTypesInTOC(const void *ptr, size_t size) {
 	for (size_t i = 0; i < numElements; ++i) {
 		ResType elementType = CFSwapInt32BigToHost((uint32_t)elements[i].elementType);
 		NSLog(@"- %@", NSFileTypeForHFSTypeCode(elementType));
+	}
+}
+
+static void attemptToIdentifyIconTypeAndSize(const void *ptr, size_t size) {
+	NSData *data = [NSData dataWithBytesNoCopy:(void *)ptr length:size freeWhenDone:NO];
+	CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef) data, /*options*/ NULL);
+	if (source) {
+		NSDictionary *props = CFBridgingRelease(CGImageSourceCopyProperties(source, /*options*/ NULL));
+		props = CFBridgingRelease(CGImageSourceCopyPropertiesAtIndex(source, /*idx*/ 0, /*options*/ NULL));
+		NSString *type = nil;
+		if (props[(id)kCGImagePropertyPNGDictionary])
+			type = (id)kUTTypePNG;
+		else if (props[(id)kCGImagePropertyJFIFDictionary])
+			type = (id)kUTTypeJPEG;
+		else if (props[(id)kCGImagePropertyTIFFDictionary])
+			type = (id)kUTTypeTIFF;
+		else if (props[(id)kCGImagePropertyGIFDictionary])
+			type = (id)kUTTypeGIF;
+		else if (props[(id)kCGImagePropertyRawDictionary] || props[(id)kCGImagePropertyDNGDictionary])
+			type = @"public.camera-raw-image";
+		else if (props[(id)kCGImageProperty8BIMDictionary])
+			type = @"com.adobe.photoshop-​image";
+
+		if (type != nil)
+			NSLog(@"- %@", type);
+
+		NSNumber *widthNum = props[(id)kCGImagePropertyPixelWidth];
+		if (widthNum != nil)
+			NSLog(@"- %@ pixels wide", widthNum);
+		NSNumber *heightNum = props[(id)kCGImagePropertyPixelHeight];
+		if (heightNum != nil)
+			NSLog(@"- %@ pixels tall", heightNum);
+
+		CFRelease(source);
 	}
 }
