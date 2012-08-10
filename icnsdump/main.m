@@ -88,11 +88,27 @@ static void attemptToIdentifyIconTypeAndSize(const void *ptr, size_t size) {
 			NSLog(@"- %@", type);
 
 		NSNumber *widthNum = props[(id)kCGImagePropertyPixelWidth];
-		if (widthNum != nil)
-			NSLog(@"- %@ pixels wide", widthNum);
 		NSNumber *heightNum = props[(id)kCGImagePropertyPixelHeight];
-		if (heightNum != nil)
+		if (widthNum != nil && heightNum != nil)
+			NSLog(@"- %@ by %@ pixels", widthNum, heightNum);
+		else if (widthNum != nil)
+			NSLog(@"- %@ pixels wide", widthNum);
+		else if (heightNum != nil)
 			NSLog(@"- %@ pixels tall", heightNum);
+
+		NSNumber *xDPINum = props[(id)kCGImagePropertyDPIWidth];
+		NSNumber *yDPINum = props[(id)kCGImagePropertyDPIHeight];
+		if (xDPINum != nil && yDPINum != nil)
+			NSLog(@"- %@ by %@ DPI", xDPINum, yDPINum);
+		else if (xDPINum != nil)
+			NSLog(@"- %@ DPI wide", xDPINum);
+		else if (yDPINum != nil)
+			NSLog(@"- %@ DPI tall", yDPINum);
+
+		NSNumber *bitsPerComponentNum = props[(id)kCGImagePropertyDepth];
+		NSString *colorModelName = props[(id)kCGImagePropertyColorModel];
+		if (bitsPerComponentNum && colorModelName)
+			NSLog(@"- %@-bit %@", bitsPerComponentNum, colorModelName);
 
 		CFRelease(source);
 	}
