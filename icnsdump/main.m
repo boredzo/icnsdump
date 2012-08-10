@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 static void readAndListIconFamilyFileAtPath(NSString *path) {
 	NSURL *URL = [NSURL fileURLWithPath:path];
 	NSError *error = nil;
-	NSData *data = [NSData dataWithContentsOfURL:URL options:0 error:&error];
+	NSData *data = [NSData dataWithContentsOfURL:URL options:NSDataReadingMappedIfSafe | NSDataReadingUncached error:&error];
 	if (data != nil) {
 		const struct IconFamilyResource *familyPtr = [data bytes];
 		SInt32 resourceSize = (SInt32)CFSwapInt32BigToHost((uint32_t)familyPtr->resourceSize);
